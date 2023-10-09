@@ -1,6 +1,8 @@
 # install.packages("rsdmx")
 library(rsdmx)
 library(tidyverse)
+library(scales)
+source("insee_functions.R")
 
 # insee_datasets --------
 
@@ -55,3 +57,22 @@ insee_dataset %>%
   summarise(Nobs = n())
 
 
+# En utilisant les IDBANKs --------
+
+"010567006+010567010+010567012+010567056" %>%
+  paste0("https://www.bdm.insee.fr/series/sdmx/data/SERIES_BDM/", .) %>%
+  readSDMX %>%
+  as_tibble %>%
+  quarter_to_date %>%
+  mutate(OBS_VALUE = as.numeric(OBS_VALUE)) %>%
+  group_by(REF_AREA) %>%
+  mutate(OBS_VALUE = 100*OBS_VALUE / OBS_VALUE[date == as.Date("1998-01-01")]) %>%
+  mutate(TITLE_FR = gsub("- Appartements", "\nAppartements", TITLE_FR)) %>%
+  ggplot + geom_line(aes(x = date, y = OBS_VALUE, color = TITLE_FR)) +
+  theme_minimal()  +
+  scale_x_date(breaks = as.Date(paste0(seq(1960, 2050, 2), "-01-01")),
+               labels = date_format("%Y")) +
+  theme(legend.position = c(0.25, 0.85),
+        legend.title = element_blank()) +
+  xlab("") + ylab("Indice des prix des logements anciens (1998 = 100)") +
+  scale_y_log10(breaks = seq(0, 7000, 50))
