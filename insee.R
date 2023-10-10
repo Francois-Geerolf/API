@@ -51,6 +51,7 @@ insee_codelist <- paste0("https://www.bdm.insee.fr/series/sdmx/codelist/FR1/CL_I
   select(INDICATEUR = id, Indicateur = label.fr)
 
 
+
 insee_dataset %>%
   left_join(insee_codelist, by = "INDICATEUR") %>%
   group_by(INDICATEUR, Indicateur) %>%
@@ -58,6 +59,10 @@ insee_dataset %>%
 
 
 # En utilisant les IDBANKs --------
+
+data <- "https://www.bdm.insee.fr/series/sdmx/data/SERIES_BDM/010567006+010567010" %>%
+  readSDMX %>%
+  as_tibble
 
 "010567006+010567010+010567012+010567056" %>%
   paste0("https://www.bdm.insee.fr/series/sdmx/data/SERIES_BDM/", .) %>%
