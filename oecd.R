@@ -42,7 +42,7 @@ QNA_EXPENDITURE_CAPITA %>%
   group_by(Ref_area) %>%
   arrange(date) %>%
   mutate(obsValue = 100 * obsValue / obsValue[1]) %>%
-  ggplot(.) + theme_minimal() + xlab("") + ylab("PIB par habitant (1999T1 = 100)") +
+  ggplot(.) + theme_minimal() + xlab("") + ylab("GDP Per Capita (1999-Q1 = 100)") +
   geom_line(aes(x = date, y = obsValue, color = Ref_area)) + 
   scale_color_manual(values = c("#003399", "#B22234")) +
   geom_rect(data = nber_recessions %>%
@@ -59,7 +59,7 @@ QNA_EXPENDITURE_CAPITA %>%
         legend.title = element_blank()) +
   scale_y_log10(breaks = seq(50, 200, 5))
 
-## In French -------------
+## En Français -------------
 
 metadata_load_fr <- function(code, CL_code, data = QNA_EXPENDITURE_CAPITA_var){
   assign(code, as.data.frame(data@codelists, codelistId = CL_code) %>%
@@ -93,7 +93,6 @@ QNA_EXPENDITURE_CAPITA %>%
   theme(legend.position = c(0.26, 0.8),
         legend.title = element_blank()) +
   scale_y_log10(breaks = seq(50, 200, 5))
-
 
 
 
